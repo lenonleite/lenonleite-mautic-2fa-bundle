@@ -1,0 +1,24 @@
+{
+  "name": "lenonleite/lenonleite-mautic-2fa",
+  "description": "This plugin adds 2FA to Mautic",
+  "type": "mautic-plugin",
+  "license": "GPL-3.0",
+  "authors": [
+      {
+          "name": "Lenon Leite",
+          "email": "lenonleite@gmail.com"
+      }
+  ],
+  "keywords": [
+    "mautic",
+    "plugin",
+    "integration"
+  ],
+  "extra": {
+      "install-directory-name": "LenonLeiteMautic2FABundle",
+  },
+  "minimum-stability": "dev",
+  "require": {
+      "mautic/core-lib": "^5.0"
+  }
+}
