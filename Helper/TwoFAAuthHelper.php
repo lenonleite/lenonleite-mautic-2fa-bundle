@@ -7,10 +7,8 @@ use Mautic\UserBundle\Model\UserModel;
 use MauticPlugin\LenonLeiteMautic2FABundle\Exception\TwoFAException;
 use MauticPlugin\LenonLeiteMautic2FABundle\Helper\TwoFA\IQRCodeProvider;
 use MauticPlugin\LenonLeiteMautic2FABundle\Helper\TwoFA\IRNGProvider;
-use MauticPlugin\LenonLeiteMautic2FABundle\Helper\TwoFA\ITimeProvider;
 use MauticPlugin\LenonLeiteMautic2FABundle\Helper\TwoFA\QR\QRServerProvider;
 use MauticPlugin\LenonLeiteMautic2FABundle\Helper\TwoFA\Rng\CSRNGProvider;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Code get from.
@@ -78,8 +76,6 @@ class TwoFAAuthHelper
 
     /**
      * @param ?int $time
-     *
-     * @return int
      */
     private function getTime($time = null): int
     {
@@ -181,7 +177,7 @@ class TwoFAAuthHelper
 
         $output = '';
         foreach (explode(' ', $blocks) as $block) {
-            $output .= chr((int)bindec(str_pad($block, 8, '0', STR_PAD_RIGHT)));
+            $output .= chr((int) bindec(str_pad($block, 8, '0', STR_PAD_RIGHT)));
         }
 
         return $output;

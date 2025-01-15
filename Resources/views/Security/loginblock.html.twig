@@ -1,0 +1,30 @@
+{% extends app.request.xmlHttpRequest ? '@MauticCore/Default/content.html.twig' : '@MauticUser/Security/base.html.twig' %}
+{% block header %}{% trans %}mautic.user.auth.header{% endtrans %}{% endblock %}
+{% block headerTitle %}{% trans %}mautic.user.auth.expired.header{% endtrans %}{% endblock %}
+
+{% block content %}
+    {% if app.request.xmlHttpRequest %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-6 inline-login">
+                {{ block('mainContent') }}
+            </div>
+        </div>
+    {% else %}
+        {{ block('mainContent') }}
+    {% endif %}
+{% endblock %}
+
+{% block mainContent %}
+    <div class="row">
+        <div class="col-12 ma-10">
+            <p>
+                {{ text | raw }}
+            </p>
+
+            <p>
+                <a class="btn btn-lg btn-primary btn-block" href="{{ path('login') }}">Login Page</a>
+            </p>
+        </div>
+
+    </div>
+{% endblock %}

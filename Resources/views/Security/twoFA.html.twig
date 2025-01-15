@@ -1,0 +1,53 @@
+{% extends app.request.xmlHttpRequest ? '@MauticCore/Default/content.html.twig' : '@MauticUser/Security/base.html.twig' %}
+{% block header %}{% trans %}mautic.user.auth.header{% endtrans %}{% endblock %}
+{% block headerTitle %}{% trans %}mautic.user.auth.expired.header{% endtrans %}{% endblock %}
+
+{% block content %}
+    {% if app.request.xmlHttpRequest %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-6 inline-login">
+                {{ block('mainContent') }}
+            </div>
+        </div>
+    {% else %}
+        {{ block('mainContent') }}
+    {% endif %}
+{% endblock %}
+
+{% block mainContent %}
+    <form class="form-group login-form" name="login" data-toggle="ajax" role="form"
+          action="{{ path('lenonleitemautic_2fa_auth') }}" method="post">
+
+        {% if srcQrCode2fa %}
+            <div class="input-group mb-md">
+                Attention: You must use a two-factor authentication application to access the system.
+                It will only appear once. If you lose it, you will have to contact the administrator.
+            </div>
+            <div class="input-group mb-md">
+
+
+                <img src="{{ srcQrCode2fa }}" alt="QR Code"/>
+
+            </div>
+        {% endif %}
+        <div class="input-group mb-md">
+            Please enter the code from your authenticator app.
+        </div>
+        <div class="input-group mb-md">
+
+            <span class="input-group-addon">
+				<i class="fa fa-code"></i>
+			</span>
+            <label for="username" class="sr-only">Two Factor Authentication Code</label>
+            <input type="text" id="twofacode" name="_twofacode" class="form-control input-lg"
+                   value="" required autofocus
+                   placeholder="99999"/>
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('twofacode')|escape }}"/>
+        <button class="btn btn-lg btn-primary btn-block"
+                type="submit">Send
+        </button>
+
+    </form>
+{% endblock %}

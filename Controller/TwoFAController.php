@@ -16,10 +16,10 @@ use Mautic\UserBundle\Model\UserModel;
 use MauticPlugin\LenonLeiteMautic2FABundle\Form\Type\TwoFALoginType;
 use MauticPlugin\LenonLeiteMautic2FABundle\Helper\TwoFAAuthHelper;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class TwoFAController extends CommonController
@@ -66,16 +66,20 @@ class TwoFAController extends CommonController
             Request::METHOD_POST === $request->getMethod()
             && $twoFAQRCode
         ) {
-            $twoFaCodeRequest = $request->get('two_fa_login')['_twofacode'];
+            $twoFaCodeRequest = $request->get('_twofacode');
+
             $code    = $this->twoFAAuthHelper->getCode($this->getTwoFASecret($currentUser));
+
             if ($code === $twoFaCodeRequest) {
                 $session = $request->getSession();
                 $session->set('mautic.2fa.isAuth', true);
+
                 return $this->redirectToRoute('mautic_dashboard_index');
             }
         }
 
         $form                  = $this->createForm(TwoFALoginType::class, $request->request->all());
+        $this->addFlash('error', 'Authenticating with 2FA wrong');
 
         return $this->delegateView([
             'viewParameters' => [
@@ -127,6 +131,7 @@ class TwoFAController extends CommonController
         $ids = json_decode($request->query->get('ids', ''), true);
         if (empty($ids)) {
             $this->addFlashMessage('mautic.plugin.lenonleitemautic2fa.batch_reset_error');
+
             return $this->redirectToRoute('mautic_user_index');
         }
         assert(is_array($ids));
@@ -150,7 +155,7 @@ class TwoFAController extends CommonController
         }
 
         $preferences['2fa']               = [
-            'twofa_secret' => '',
+            'twofa_secret'     => '',
             'twofa_src_qrcode' => '',
         ];
 

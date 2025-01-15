@@ -74,7 +74,7 @@ class TwoFASubscriber implements EventSubscriberInterface
     {
         $bundles = $this->bundleHelper->getMauticBundles(true);
         foreach ($bundles as $bundle) {
-            if(
+            if (
                 !is_array($bundle)
                 || !isset($bundle['config'])
                 || !isset($bundle['config']['routes'])
