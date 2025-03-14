@@ -38,6 +38,12 @@ After the plugin is installed and configured.
 4. Insert the code in the field and click on the button.
 5. Done!
 
+Restart QR code generation
+1. Go to `/s/users` page
+2. Select users that you want to restart the QR code generation
+3. Click in bath actions and select `Reset 2FA`
+4. ![img.png](Assets/img/readme-reset.png)
+
 AUTHOR
 ------
 Lenon Leite - @lenonleite

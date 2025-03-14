@@ -3,7 +3,7 @@
 return [
     'name'        => 'Lenon Leite',
     'description' => 'This plugin adds 2FA to Mautic',
-    'version'     => '1.0.0',
+    'version'     => '1.0.1',
     'author'      => 'Lenon Leite',
     'services'    => [
         'integrations' => [

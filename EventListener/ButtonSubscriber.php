@@ -37,12 +37,12 @@ class ButtonSubscriber implements EventSubscriberInterface
                             'mautic.core.export.items',
                             ['%items%' => 'contacts']
                         ),
-                        'data-confirm-text'     => $this->translator->trans('mautic.core.export.xlsx'),
+                        'data-confirm-text'     => $this->translator->trans('mautic.plugin.lenonleitemautic2fa.button.batch.reset'),
                         'data-confirm-callback' => 'executeBatchAction',
                         'data-cancel-text'      => $this->translator->trans('mautic.core.form.cancel'),
                         'data-cancel-callback'  => 'dismissConfirmation',
                     ],
-                    'btnText'   => $this->translator->trans('mautic.core.export.xlsx'),
+                    'btnText'   => $this->translator->trans('mautic.plugin.lenonleitemautic2fa.button.batch.reset'),
                     'iconClass' => 'ri-file-excel-line',
                 ],
                 ButtonHelper::LOCATION_BULK_ACTIONS
