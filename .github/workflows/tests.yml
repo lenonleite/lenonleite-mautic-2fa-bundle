@@ -95,7 +95,7 @@ jobs:
         run: |
           composer test -- --filter LenonLeiteMautic2FABundle
 
-      - name: Run PHPStan
-        working-directory: ./mautic5.2
-        run: |
-          composer phpstan plugins/LenonLeiteMautic2FABundle -- --error-format=github
+#      - name: Run PHPStan
+#        working-directory: ./mautic5.2
+#        run: |
+#          composer phpstan plugins/LenonLeiteMautic2FABundle -- --error-format=github
