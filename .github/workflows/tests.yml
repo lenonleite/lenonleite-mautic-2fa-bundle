@@ -97,5 +97,11 @@ jobs:
 
       - name: Run PHPStan
         working-directory: ./mautic5.2
+        env:
+          APP_ENV: test
+          DB_HOST: 127.0.0.1
+          DB_USER: db
+          DB_PASSWD: db
+          DB_NAME: mautictest
         run: |
           composer phpstan plugins/LenonLeiteMautic2FABundle -- --error-format=github
