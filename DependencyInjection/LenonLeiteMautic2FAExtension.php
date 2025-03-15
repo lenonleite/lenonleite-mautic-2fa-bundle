@@ -15,3 +15,4 @@ class LenonLeiteMautic2FAExtension extends Extension
         $loader->load('services.php');
     }
 }
+
