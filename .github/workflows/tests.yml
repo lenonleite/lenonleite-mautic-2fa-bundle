@@ -1,0 +1,101 @@
+name: Plugin Tests PHP Matrix
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions: ['8.1', '8.2', '8.3']
+        database: ['mysql:8.0', 'mariadb:10.6']
+    name: PHP ${{ matrix.php-versions }} with ${{ matrix.database }}
+    
+    services:
+      db:
+        image: ${{ matrix.database }}
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: mautictest
+          MYSQL_USER: db
+          MYSQL_PASSWORD: db
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout plugin code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql, pdo_mysql
+          coverage: none
+
+      - name: Download Mautic
+        run: |
+          git clone https://github.com/mautic/mautic.git mautic5.2
+          cd mautic5.2
+          git checkout 5.2.0
+
+      - name: Configure Mautic Test Environment
+        working-directory: ./mautic5.2
+        run: |
+          cp .env .env.test.local
+          echo "DB_HOST=127.0.0.1" >> .env.test.local
+          echo "DB_USER=db" >> .env.test.local
+          echo "DB_PASSWD=db" >> .env.test.local
+          echo "DB_NAME=mautictest" >> .env.test.local
+
+      - name: Install Mautic dependencies
+        working-directory: ./mautic5.2
+        run: |
+          composer validate
+          composer install --no-interaction --no-progress
+
+      - name: Move plugin to Mautic plugins directory
+        run: |
+          mkdir -p mautic5.2/plugins/LenonLeiteMautic2FABundle
+          mv $(ls -A | grep -v "mautic5.2") mautic5.2/plugins/LenonLeiteMautic2FABundle/
+
+      - name: Wait for database to be ready
+        run: |
+          for i in {1..30}; do
+            mysql -h 127.0.0.1 -u db -pdb -e "SELECT 1" mautictest && break
+            sleep 1
+          done
+
+      - name: Setup test database
+        working-directory: ./mautic5.2
+        env:
+          APP_ENV: test
+          DB_HOST: 127.0.0.1
+          DB_USER: db
+          DB_PASSWD: db
+          DB_NAME: mautictest
+        run: |
+          php bin/console doctrine:database:create --env=test --if-not-exists || true
+          php bin/console doctrine:schema:create --env=test
+          php bin/console doctrine:fixtures:load --env=test --no-interaction
+
+      - name: Run plugin tests
+        working-directory: ./mautic5.2
+        env:
+          APP_ENV: test
+          DB_HOST: 127.0.0.1
+          DB_USER: db
+          DB_PASSWD: db
+          DB_NAME: mautictest
+        run: |
+          composer test -- --filter LenonLeiteMautic2FABundle
+
+      - name: Run PHPStan
+        working-directory: ./mautic5.2
+        run: |
+          composer phpstan plugins/LenonLeiteMautic2FABundle -- --error-format=github

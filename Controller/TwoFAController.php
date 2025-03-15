@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TwoFAController extends CommonController
 {
+    // @phpstan-ignore-next-line
     public function __construct(
         protected ManagerRegistry $doctrine,
         protected MauticFactory $factory,

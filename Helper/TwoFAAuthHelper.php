@@ -18,7 +18,15 @@ class TwoFAAuthHelper
     public const TWOFA_TITLE            = 'LenonLeiteMautic2FA';
     public const TWOFA_SECOND_TITLE     = 'Mautic';
     public const DEFAULT_CHARACTERS     = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+    /**
+     * @var array<int, string>
+     */
     private static array $_base32;
+
+    /**
+     * @var array<string, int>
+     */
     private static array $_base32lookup = [];
     private string $issuer;
     private int $timeprovider;
