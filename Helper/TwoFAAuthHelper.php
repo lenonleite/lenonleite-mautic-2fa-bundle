@@ -200,7 +200,7 @@ class TwoFAAuthHelper
         $preferences['2fa']['twofa_secret']               = $this->createSecret();
         $preferences['2fa']['twofa_src_qrcode']           = $this->getQRCodeImageAsDataUri(
             //            $user->getUsername(),
-            self::TWOFA_SECOND_TITLE,
+            self::TWOFA_SECOND_TITLE.' - '.$user->getEmail(),
             $preferences['2fa']['twofa_secret']
         );
         $user->setPreferences($preferences);
